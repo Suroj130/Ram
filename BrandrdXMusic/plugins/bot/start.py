@@ -27,17 +27,25 @@ from config import BANNED_USERS
 from strings import get_string
 
 #--------------------------
-
+# শুধুমাত্র ভ্যালিড URLs রাখুন
 NEXI_VID = [
 "https://files.catbox.moe/5gvx39.jpg",
 "https://files.catbox.moe/labrq1.jpg",
 "https://files.catbox.moe/tu6jwt.jpg",
 "https://files.catbox.moe/9apc99.jpg",
 "https://files.catbox.moe/hhd8o0.jpg",
-"",
-"",
-"",
 ]
+
+# অথবা যদি আরও ছবি যোগ করতে চান:
+# NEXI_VID = [
+# "https://files.catbox.moe/5gvx39.jpg",
+# "https://files.catbox.moe/labrq1.jpg",
+# "https://files.catbox.moe/tu6jwt.jpg",
+# "https://files.catbox.moe/9apc99.jpg",
+# "https://files.catbox.moe/hhd8o0.jpg",
+# "https://files.catbox.moe/your_new_image1.jpg",
+# "https://files.catbox.moe/your_new_image2.jpg",
+# ]
 
 @app.on_message(filters.command(["start"]) & filters.private & ~BANNED_USERS)
 @LanguageStart
@@ -47,11 +55,19 @@ async def start_pm(client, message: Message, _):
         name = message.text.split(None, 1)[1]
         if name[0:4] == "help":
             keyboard = help_pannel(_)
-            return await message.reply_video(
-                random.choice(NEXI_VID),
-                caption=_["help_1"].format(config.SUPPORT_CHAT),
-                reply_markup=keyboard,
-            )
+            # ভিডিও/ছবি পাঠানোর আগে চেক করুন লিস্ট খালি কিনা
+            if NEXI_VID and all(NEXI_VID):  # সবগুলো এলিমেন্ট ভ্যালিড কিনা চেক
+                return await message.reply_video(
+                    random.choice(NEXI_VID),
+                    caption=_["help_1"].format(config.SUPPORT_CHAT),
+                    reply_markup=keyboard,
+                )
+            else:
+                # যদি ছবি না থাকে, শুধু টেক্সট পাঠান
+                return await message.reply_text(
+                    _["help_1"].format(config.SUPPORT_CHAT),
+                    reply_markup=keyboard,
+                )
         if name[0:3] == "sud":
             await sudoers_list(client=client, message=message, _=_)
             if await is_on_off(2):
@@ -99,11 +115,18 @@ async def start_pm(client, message: Message, _):
                 )
     else:
         out = private_panel(_)
-        await message.reply_video(
-            random.choice(NEXI_VID),
-            caption=_["start_2"].format(message.from_user.mention, app.mention),
-            reply_markup=InlineKeyboardMarkup(out),
-        )
+        # ভিডিও/ছবি পাঠানোর আগে চেক করুন
+        if NEXI_VID and all(NEXI_VID):
+            await message.reply_video(
+                random.choice(NEXI_VID),
+                caption=_["start_2"].format(message.from_user.mention, app.mention),
+                reply_markup=InlineKeyboardMarkup(out),
+            )
+        else:
+            await message.reply_text(
+                _["start_2"].format(message.from_user.mention, app.mention),
+                reply_markup=InlineKeyboardMarkup(out),
+            )
         if await is_on_off(2):
             return await app.send_message(
                 chat_id=config.LOGGER_ID,
@@ -116,11 +139,19 @@ async def start_pm(client, message: Message, _):
 async def start_gp(client, message: Message, _):
     out = start_panel(_)
     uptime = int(time.time() - _boot_)
-    await message.reply_video(
-        random.choice(NEXI_VID),
-        caption=_["start_1"].format(app.mention, get_readable_time(uptime)),
-        reply_markup=InlineKeyboardMarkup(out),
-    )
+    
+    # গ্রুপে শুরু করার সময়ও চেক করুন
+    if NEXI_VID and all(NEXI_VID):
+        await message.reply_video(
+            random.choice(NEXI_VID),
+            caption=_["start_1"].format(app.mention, get_readable_time(uptime)),
+            reply_markup=InlineKeyboardMarkup(out),
+        )
+    else:
+        await message.reply_text(
+            _["start_1"].format(app.mention, get_readable_time(uptime)),
+            reply_markup=InlineKeyboardMarkup(out),
+        )
     return await add_served_chat(message.chat.id)
 
 
@@ -151,17 +182,29 @@ async def welcome(client, message: Message):
                     return await app.leave_chat(message.chat.id)
 
                 out = start_panel(_)
-                await message.reply_video(
-                    random.choice(NEXI_VID),
-                    caption=_["start_3"].format(
-                        message.from_user.mention,
-                        app.mention,
-                        message.chat.title,
-                        app.mention,
-                    ),
-                    reply_markup=InlineKeyboardMarkup(out),
-                )
+                # ওয়েলকাম মেসেজেও চেক করুন
+                if NEXI_VID and all(NEXI_VID):
+                    await message.reply_video(
+                        random.choice(NEXI_VID),
+                        caption=_["start_3"].format(
+                            message.from_user.mention,
+                            app.mention,
+                            message.chat.title,
+                            app.mention,
+                        ),
+                        reply_markup=InlineKeyboardMarkup(out),
+                    )
+                else:
+                    await message.reply_text(
+                        _["start_3"].format(
+                            message.from_user.mention,
+                            app.mention,
+                            message.chat.title,
+                            app.mention,
+                        ),
+                        reply_markup=InlineKeyboardMarkup(out),
+                    )
                 await add_served_chat(message.chat.id)
                 await message.stop_propagation()
         except Exception as ex:
-            print(ex)
+            print(f"Error in welcome: {ex}")
