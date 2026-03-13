@@ -27,25 +27,14 @@ from config import BANNED_USERS
 from strings import get_string
 
 #--------------------------
-# শুধুমাত্র ভ্যালিড URLs রাখুন
-NEXI_VID = [
-"https://files.catbox.moe/5gvx39.jpg",
-"https://files.catbox.moe/labrq1.jpg",
-"https://files.catbox.moe/tu6jwt.jpg",
-"https://files.catbox.moe/9apc99.jpg",
-"https://files.catbox.moe/hhd8o0.jpg",
+# ছবির URLs (JPG ফাইল)
+NEXI_IMG = [
+    "https://files.catbox.moe/5gvx39.jpg",
+    "https://files.catbox.moe/labrq1.jpg",
+    "https://files.catbox.moe/tu6jwt.jpg",
+    "https://files.catbox.moe/9apc99.jpg",  # এই ছবিটি আপনার স্ক্রিনশটে আছে
+    "https://files.catbox.moe/hhd8o0.jpg",
 ]
-
-# অথবা যদি আরও ছবি যোগ করতে চান:
-# NEXI_VID = [
-# "https://files.catbox.moe/5gvx39.jpg",
-# "https://files.catbox.moe/labrq1.jpg",
-# "https://files.catbox.moe/tu6jwt.jpg",
-# "https://files.catbox.moe/9apc99.jpg",
-# "https://files.catbox.moe/hhd8o0.jpg",
-# "https://files.catbox.moe/your_new_image1.jpg",
-# "https://files.catbox.moe/your_new_image2.jpg",
-# ]
 
 @app.on_message(filters.command(["start"]) & filters.private & ~BANNED_USERS)
 @LanguageStart
@@ -55,15 +44,14 @@ async def start_pm(client, message: Message, _):
         name = message.text.split(None, 1)[1]
         if name[0:4] == "help":
             keyboard = help_pannel(_)
-            # ভিডিও/ছবি পাঠানোর আগে চেক করুন লিস্ট খালি কিনা
-            if NEXI_VID and all(NEXI_VID):  # সবগুলো এলিমেন্ট ভ্যালিড কিনা চেক
-                return await message.reply_video(
-                    random.choice(NEXI_VID),
+            # ছবি পাঠান (reply_video এর পরিবর্তে reply_photo)
+            if NEXI_IMG:
+                return await message.reply_photo(
+                    photo=random.choice(NEXI_IMG),
                     caption=_["help_1"].format(config.SUPPORT_CHAT),
                     reply_markup=keyboard,
                 )
             else:
-                # যদি ছবি না থাকে, শুধু টেক্সট পাঠান
                 return await message.reply_text(
                     _["help_1"].format(config.SUPPORT_CHAT),
                     reply_markup=keyboard,
@@ -115,10 +103,10 @@ async def start_pm(client, message: Message, _):
                 )
     else:
         out = private_panel(_)
-        # ভিডিও/ছবি পাঠানোর আগে চেক করুন
-        if NEXI_VID and all(NEXI_VID):
-            await message.reply_video(
-                random.choice(NEXI_VID),
+        # ছবি পাঠান (reply_video এর পরিবর্তে reply_photo)
+        if NEXI_IMG:
+            await message.reply_photo(
+                photo=random.choice(NEXI_IMG),
                 caption=_["start_2"].format(message.from_user.mention, app.mention),
                 reply_markup=InlineKeyboardMarkup(out),
             )
@@ -140,10 +128,10 @@ async def start_gp(client, message: Message, _):
     out = start_panel(_)
     uptime = int(time.time() - _boot_)
     
-    # গ্রুপে শুরু করার সময়ও চেক করুন
-    if NEXI_VID and all(NEXI_VID):
-        await message.reply_video(
-            random.choice(NEXI_VID),
+    # গ্রুপে শুরু করার সময় ছবি পাঠান
+    if NEXI_IMG:
+        await message.reply_photo(
+            photo=random.choice(NEXI_IMG),
             caption=_["start_1"].format(app.mention, get_readable_time(uptime)),
             reply_markup=InlineKeyboardMarkup(out),
         )
@@ -182,10 +170,10 @@ async def welcome(client, message: Message):
                     return await app.leave_chat(message.chat.id)
 
                 out = start_panel(_)
-                # ওয়েলকাম মেসেজেও চেক করুন
-                if NEXI_VID and all(NEXI_VID):
-                    await message.reply_video(
-                        random.choice(NEXI_VID),
+                # ওয়েলকাম মেসেজে ছবি পাঠান
+                if NEXI_IMG:
+                    await message.reply_photo(
+                        photo=random.choice(NEXI_IMG),
                         caption=_["start_3"].format(
                             message.from_user.mention,
                             app.mention,
