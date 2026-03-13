@@ -29,14 +29,14 @@ from strings import get_string
 #--------------------------
 
 NEXI_VID = [
-"https://files.catbox.moe/tp3mdw.mp4",
-"https://files.catbox.moe/tvz362.mp4",
-"https://files.catbox.moe/xqa8aq.mp4",
-"https://files.catbox.moe/exzeww.mp4",
-"https://files.catbox.moe/acndbv.mp4",
-"https://files.catbox.moe/o9rmgp.mp4",
-"https://graph.org/file/2a7f857f31b32766ac6fc.mp4",
-"https://files.catbox.moe/2me01u.mp4",
+"https://files.catbox.moe/5gvx39.jpg",
+"https://files.catbox.moe/labrq1.jpg",
+"https://files.catbox.moe/tu6jwt.jpg",
+"https://files.catbox.moe/9apc99.jpg",
+"https://files.catbox.moe/hhd8o0.jpg",
+"",
+"",
+"",
 ]
 
 @app.on_message(filters.command(["start"]) & filters.private & ~BANNED_USERS)
