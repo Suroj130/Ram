@@ -4,7 +4,7 @@
 from pyrogram import Client, filters
 
 # আপনার flood_control ইম্পোর্ট
-from BrandrDXMusic.utils.flood_control import flood_protect
+from BrandrdXMusic.utils.flood_control import flood_protect
 
 @Client.on_message(filters.command("start"))
 @flood_protect
