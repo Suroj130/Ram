@@ -1,3 +1,11 @@
+# ১. প্রথমে ইম্পোর্ট করুন (ফাইলের একদম উপরে)
+from BrandXMusic.utils.flood_control import flood_protect
+
+# ২. প্রতিটি কমান্ডের ঠিক আগে @flood_protect বসান
+@Client.on_message(filters.command("start"))
+@flood_protect                    # এই লাইনটা যোগ করুন
+async def start_command(client, message):
+    await message.reply("বট চালু আছে!")
 from pyrogram.types import InlineKeyboardButton
 
 import config
