@@ -1,5 +1,5 @@
 # ১. প্রথমে ইম্পোর্ট করুন (ফাইলের একদম উপরে)
-from BrandXMusic.utils.flood_control import flood_protect
+from BrandrdXMusic.utils.flood_control import flood_protect
 
 # ২. প্রতিটি কমান্ডের ঠিক আগে @flood_protect বসান
 @Client.on_message(filters.command("start"))
