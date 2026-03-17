@@ -1,12 +1,15 @@
-from pyrogram import Client
-# ১. প্রথমে ইম্পোর্ট করুন (ফাইলের একদম উপরে)
-from BrandrdXMusic.utils.flood_control import flood_protect
+# start.py
 
-# ২. প্রতিটি কমান্ডের ঠিক আগে @flood_protect বসান
+# এই লাইনটা যোগ করুন
+from pyrogram import Client, filters
+
+# আপনার flood_control ইম্পোর্ট
+from BrandrDXMusic.utils.flood_control import flood_protect
+
 @Client.on_message(filters.command("start"))
-@flood_protect                    # এই লাইনটা যোগ করুন
+@flood_protect
 async def start_command(client, message):
-    await message.reply("বট চালু আছে!")
+    await message.reply("বট চালু আছে! ✅")
 from pyrogram.types import InlineKeyboardButton
 
 import config
